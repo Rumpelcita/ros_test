@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/vagrant/ros_core/devel/setup.sh

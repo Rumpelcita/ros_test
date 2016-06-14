@@ -1,0 +1,8 @@
+prefix=/home/vagrant/ros_core/install
+
+Name: pkg_ros_core
+Description: Description of pkg_ros_core
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/vagrant/ros_core/install/lib 
+Requires: 
