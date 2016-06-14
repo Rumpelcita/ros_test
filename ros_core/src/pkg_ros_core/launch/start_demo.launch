@@ -1,8 +1,14 @@
   <launch>
+    <!-- Rosbridge Node -->
+	<include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" > 
+	 	<arg name="port" value="8080"/>
+	</include>
+
     <!-- Turtlesim Node-->
     <node pkg="turtlesim" type="turtlesim_node" name="sim"/>
 
     <node name="turtle_broadcaster" pkg="pkg_ros_core" type="broadcaster.py" respawn="false" output="screen" >
       <param name="turtle" type="string" value="turtle1" />
     </node>
+
   </launch>

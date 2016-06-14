@@ -14,9 +14,17 @@ Then provision the VM with:
 Vagrant up --provision
 ```
 
-To run roscore type the following in a terminal:
+To run ros_core type the following in a terminal:
 ```
+cd ros_core
 . devel/setup.bash
 roscd pkg_ros_core
 roslaunch pkg_ros_core start_demo.launch
 ```
+
+To run ros_web, launch ros_core and then in a new screen run:
+```
+python -m SimpleHTTPServer 9000
+```
+Then access http://localhost:9000 from your browser. You should see the ros_core turtlesim pattern being drawn in your browser.
+

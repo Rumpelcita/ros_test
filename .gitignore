@@ -5,3 +5,5 @@ ros_android/android-studio/
 ros_android/android_core-indigo/
 ros_web/roslib.js
 ros_web/roslib.min.js
+ros_web/eventemitter2.min.js
+

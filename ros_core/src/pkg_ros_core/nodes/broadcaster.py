@@ -19,12 +19,15 @@ State = enum(
     'FORWARD',
     'STOP_FORWARD',
     'TURN',
-    'STOP_TURN')
+    'STOP_TURN',
+    'STOP')
     
 global g_pose
 g_pose = Pose()
 global g_goal
 g_goal = Pose()
+global g_sides
+g_sides = 0
 
 g_state = State.FORWARD;
 g_last_state = State.FORWARD;
@@ -49,6 +52,17 @@ def print_goal():
 def command_turtle(twist_pub, velocity_linear, velocity_angular):
     twist = Twist(Vector3((velocity_linear),0,0), Vector3(0,0,(velocity_angular)))
     twist_pub.publish(twist)
+
+def stop(twist_pub):
+    global g_goal
+    global g_state
+    if has_stopped():
+        g_state = State.STOP
+        g_goal.x = g_pose.x
+        g_goal.y = g_pose.y
+        g_goal.theta = g_pose.theta
+    else:
+        command_turtle(twist_pub, 0, 0)
     
 def stop_forward(twist_pub):
     global g_goal
@@ -59,7 +73,6 @@ def stop_forward(twist_pub):
         g_goal.x = g_pose.x
         g_goal.y = g_pose.y
         g_goal.theta = fmod(g_pose.theta + (4*pi)/5.0, 2*pi)
-        rospy.loginfo("theta: %r" % g_goal.theta)
         print_goal()
     else:
         command_turtle(twist_pub, 0, 0)
@@ -79,14 +92,20 @@ def stop_turn(twist_pub):
         
 def forward(twist_pub):
     global g_state
+    global g_sides
+    if g_sides == 5:
+        g_state = State.STOP
     if has_reached_goal():
         g_state = State.STOP_FORWARD
         command_turtle(twist_pub, 0, 0)
+        g_sides += 1
     else:
         command_turtle(twist_pub, 1.0, 0.0)
         
 def turn(twist_pub):
     global g_state
+    if g_sides == 5:
+        g_state = State.STOP
     if has_reached_goal():
         g_state = State.STOP_TURN
         command_turtle(twist_pub, 0, 0)
@@ -116,11 +135,12 @@ def timer_callback(timer):
         turn(twist_pub)
     elif g_state == State.STOP_TURN:
         stop_turn(twist_pub)
+    elif g_state == State.STOP:
+        stop(twist_pub)
 
 if __name__ == '__main__':
     rospy.init_node('turtle_broadcaster')
     pose_sub = rospy.Subscriber('turtle1/pose', Pose, pose_callback)
     twist_pub = rospy.Publisher('turtle1/cmd_vel',Twist, queue_size = 10)
-    empty = std_srvs.srv.Empty
     timer = rospy.Timer(rospy.Duration(0.016), timer_callback)
     rospy.spin()
