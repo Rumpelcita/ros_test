@@ -11,7 +11,7 @@ To install vagrant on a Debian base environment, open a terminal and run:
 
 Then provision the VM with:
 ```
-Vagrant up --provision
+vagrant up --provision
 ```
 
 To run ros_core type the following in a terminal:
