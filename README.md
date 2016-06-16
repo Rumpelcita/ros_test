@@ -24,6 +24,7 @@ roslaunch pkg_ros_core start_demo.launch
 
 To run ros_web, launch ros_core and then in a new screen run:
 ```
+cd ros_web
 python -m SimpleHTTPServer 9000
 ```
 Then access http://localhost:9000 from your browser. You should see the ros_core turtlesim pattern being drawn in your browser.
